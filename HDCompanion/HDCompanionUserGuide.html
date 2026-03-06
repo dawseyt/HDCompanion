@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep-Dive User Guide - HelpDesk Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI Variable Display', 'Segoe UI', Tahoma, sans-serif; }
+        .feature-card { transition: transform 0.2s; }
+        .feature-card:hover { transform: translateY(-2px); }
+        code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+        .status-badge { padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+    <!-- Sticky Navigation -->
+    <nav class="bg-blue-800 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white p-1 rounded-lg">
+                    <svg class="w-8 h-8 text-blue-800" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold leading-tight">HelpDesk Companion</h1>
+                    <p class="text-xs text-blue-200">Comprehensive Operations Manual v2.5</p>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#core" class="hover:text-blue-200">Dashboard</a>
+                <a href="#actions" class="hover:text-blue-200">Context Menu</a>
+                <a href="#printers" class="hover:text-blue-200">Printers</a>
+                <a href="#logging" class="hover:text-blue-200">Logs</a>
+                <a href="#config" class="hover:text-blue-200">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 lg:p-12">
+        <!-- Introduction -->
+        <header class="mb-16">
+            <h2 class="text-4xl font-extrabold text-slate-900 mb-4">Mastering the Companion</h2>
+            <p class="text-xl text-slate-600 max-w-3xl leading-relaxed">
+                The HelpDesk Companion is a unified management console designed to eliminate tool-switching. This guide provides a granular breakdown of every operational feature, from Active Directory automation to remote hardware management.
+            </p>
+        </header>
+
+        <!-- Section 1: Core Dashboard -->
+        <section id="core" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h3 class="text-2xl font-bold text-blue-700">1. Central Dashboard & Monitoring</h3>
+                <div class="h-px flex-1 bg-blue-100"></div>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 feature-card">
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Account Lockout Grid
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-4">The primary <code>ListView</code> (lvData) automatically tracks locked accounts in the <code>pscu.local</code> domain.</p>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li>• <strong>Color Coding:</strong> Online/Offline status is visually indicated based on the configured theme.</li>
+                        <li>• <strong>Multi-Select:</strong> Highlight multiple rows to perform bulk unlocks or refreshes.</li>
+                        <li>• <strong>Sorting:</strong> Click any column header to sort by Username, Lockout Time, or Computer.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 feature-card">
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span> Automation Sidebar
+                    </h4>
+                    <ul class="text-sm space-y-3 text-slate-700">
+                        <li>• <strong>Auto-Refresh:</strong> Choose intervals from 30s to 30m. The app background-queries AD without freezing the UI.</li>
+                        <li>• <strong>Auto-Unlock:</strong> When enabled, the app identifies locked accounts and attempts resolution every 5 minutes (300s).</li>
+                        <li>• <strong>Email Alerts:</strong> Routes notifications to the configured SMTP list (<code>tdawsey</code>, <code>bhigginbotham</code>, <code>adaigle</code>) upon lockout detection.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 feature-card">
+                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full"></span> Global Search
+                    </h4>
+                    <p class="text-sm text-slate-600 mb-4">The search bar (txtSearch) is an <strong>intelligent entry point</strong>.</p>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li>• <strong>Context Awareness:</strong> Automatically detects if you've typed a username or a computer name.</li>
+                        <li>• <strong>AD Query:</strong> Fetches object properties directly from Active Directory, even if the account isn't locked.</li>
+                        <li>• <strong>Pause Logic:</strong> Background timers pause during active searches to prevent data overwriting.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Context Menu Actions -->
+        <section id="actions" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h3 class="text-2xl font-bold text-blue-700">2. Right-Click Functionality (Deep-Dive)</h3>
+                <div class="h-px flex-1 bg-blue-100"></div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-2xl p-8 overflow-hidden relative">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-12">
+                    <div>
+                        <h5 class="text-white font-bold mb-3 border-b border-slate-700 pb-1 uppercase text-xs tracking-widest">Core AD Tools</h5>
+                        <ul class="space-y-4 text-sm">
+                            <li><strong>Unlock Account:</strong> Executes <code>Unlock-ADAccount</code>.</li>
+                            <li><strong>Reset Password:</strong> Opens the <code>overlayReset</code>. Includes "Strong Password Generator" and "Must change at next logon" enforcement.</li>
+                            <li><strong>Group Membership:</strong> Opens a dedicated window (<code>GroupMembership.xaml</code>) listing all security and distribution groups.</li>
+                            <li><strong>View Details:</strong> Dumps all raw AD properties into the <code>overlayDetails</code> window for deep inspection.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold mb-3 border-b border-slate-700 pb-1 uppercase text-xs tracking-widest">Remote Support</h5>
+                        <ul class="space-y-4 text-sm">
+                            <li><strong>Manage Computer:</strong> Remote process and service management.</li>
+                            <li><strong>Find Lockout Source:</strong> Scans Domain Controllers for event IDs identifying the specific machine causing the lockout.</li>
+                            <li><strong>Active Sessions:</strong> Lists users currently logged into the target workstation via WMI.</li>
+                            <li><strong>GPResult:</strong> Triggers a remote <code>gpresult /r</code> to verify policy application.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold mb-3 border-b border-slate-700 pb-1 uppercase text-xs tracking-widest">Integrations & Power</h5>
+                        <ul class="space-y-4 text-sm">
+                            <li><strong>Freshservice Record:</strong> Opens the technician's browser directly to the Freshservice ticket or asset URL.</li>
+                            <li><strong>Get Uptime:</strong> Calculates system boot time to determine if a restart is required.</li>
+                            <li><strong>Power Menu:</strong> Sub-menu containing verified <strong>Restart</strong> and <strong>Shutdown</strong> commands using <code>Stop-Computer</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Printer Management Tool -->
+        <section id="printers" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h3 class="text-2xl font-bold text-blue-700">3. Multi-Threaded Printer Management</h3>
+                <div class="h-px flex-1 bg-blue-100"></div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div class="p-8 border-b border-slate-100 bg-slate-50">
+                    <p class="text-slate-700 mb-6">Accessed via <code>Right-Click > Printer Management</code>, this module spawns a standalone 64-bit PowerShell process (<code>PrinterManager.ps1</code>) to ensure maximum compatibility with Windows printer drivers.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <div>
+                            <h6 class="font-bold text-blue-800 mb-3">Diagnostic Functions</h6>
+                            <ul class="space-y-4">
+                                <li class="flex gap-3">
+                                    <span class="font-mono text-blue-600 bg-blue-50 px-2 rounded">Restart Spooler</span>
+                                    <span class="text-sm text-slate-600">Remotely stops and starts the <code>Spooler</code> service to clear stuck jobs.</span>
+                                </li>
+                                <li class="flex gap-3">
+                                    <span class="font-mono text-blue-600 bg-blue-50 px-2 rounded">View Details</span>
+                                    <span class="text-sm text-slate-600">Displays driver version, port name, and sharing status for any selected printer.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h6 class="font-bold text-blue-800 mb-3">Deployment Functions</h6>
+                            <ul class="space-y-4">
+                                <li class="flex gap-3 text-sm">
+                                    <span class="font-mono text-blue-600 bg-blue-50 px-2 rounded">Remote Manifest:</span> 
+									<span class="text-sm text-slate-600">Queries the target machine for existing drivers to allow instant installation.</span>
+                                </li>
+                                <li class="flex gap-3 text-sm">
+                                    <span class="font-mono text-blue-600 bg-blue-50 px-2 rounded">INF Staging:</span> 
+									<span class="text-sm text-slate-600">Upload a local <code>.inf</code> file to the remote PC's staging area for new hardware support.</span>
+                                </li>
+                                <li class="flex gap-3 text-sm">
+                                    <span class="font-mono text-blue-600 bg-blue-50 px-2 rounded">Local Mirror:</span>
+									<span class="text-sm text-slate-600">Copies a printer driver already installed on <strong>your</strong> computer to the remote user's computer.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Event Logging & History -->
+        <section id="logging" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h3 class="text-2xl font-bold text-blue-700">4. Auditing & History</h3>
+                <div class="h-px flex-1 bg-blue-100"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h4 class="font-bold mb-4">Live Event Log (RichText)</h4>
+                    <p class="text-sm text-slate-600 mb-4">The <code>txtLog</code> box provides real-time feedback with color-coded status levels:</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-blue-500"></span> <strong>Info:</strong> System starts, config loads.</div>
+                        <div class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-green-500"></span> <strong>Success:</strong> Successful unlocks and password resets.</div>
+                        <div class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-red-500"></span> <strong>Error:</strong> Failed connections or permission issues.</div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h4 class="font-bold mb-4">Historical Log Viewer</h4>
+                    <p class="text-sm text-slate-600 mb-4">Clicking <strong>View Logs</strong> opens the <code>LogViewer.xaml</code> utility, allowing for long-term audit analysis.</p>
+                    <ul class="text-sm space-y-2">
+                        <li>• <strong>Filtering:</strong> Search by <code>Operator</code> (which technician performed the task) or <code>Target User</code>.</li>
+                        <li>• <strong>Date Range:</strong> Narrow down results using the <code>DatePicker</code> controls.</li>
+                        <li>• <strong>Export:</strong> Generate a CSV report for management or compliance reviews.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Config & Customization -->
+        <section id="config" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h3 class="text-2xl font-bold text-blue-700">5. Configuration & Personalization</h3>
+                <div class="h-px flex-1 bg-blue-100"></div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-slate-700 mb-6">The app behavior is controlled by <code>HDCompanionCfg.json</code>. You can customize the following via the <strong>Settings</strong> gear icon:</p>
+                
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h6 class="font-bold text-slate-800 mb-2">Technical Settings</h6>
+                        <ul class="text-xs space-y-3 font-mono text-slate-600">
+                            <li>LogRetentionDays: 90</li>
+                            <li>LogDirectoryUNC: \\vm-isserver\Toolkit\...</li>
+                            <li>FilteredUsers: ["guest", "support", "admbrian"]</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="font-bold text-slate-800 mb-2">Theming Engine</h6>
+                        <p class="text-sm text-slate-600 mb-2">The app supports dynamic theme switching. Colors are injected into XAML as <code>DynamicResource</code> objects.</p>
+                        <div class="flex gap-2">
+                            <span class="status-badge bg-blue-100 text-blue-800">Light Mode</span>
+                            <span class="status-badge bg-slate-800 text-white">Dark Mode</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-24 pt-12 border-t border-slate-200 text-center text-slate-400 text-sm">
+            <p>&copy; 2026 Pelican Credit Union - HelpDesk Companion</p>
+            <p class="mt-2">Proprietary Internal Support</p>
+        </footer>
+    </main>
+</body>
+</html>

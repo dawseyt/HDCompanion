@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpdesk Companion - Technical Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI Variable Display', 'Segoe UI', sans-serif; background-color: #f8fafc; }
+        .code-block { font-family: 'Consolas', monospace; font-size: 0.85rem; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <nav class="bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <span class="font-bold text-xl tracking-tight">Helpdesk Companion <span class="font-light text-slate-400 text-sm ml-2">Architecture & Technical Reference</span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white border-b border-gray-200 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">System Architecture</h1>
+            <p class="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                A deep dive into the PowerShell framework, WPF integration, security posture, and remote execution logic powering the Helpdesk Companion.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="md:col-span-1">
+            <div class="sticky top-24 space-y-1">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 ml-2">Core Infrastructure</h3>
+                <a href="#architecture" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">Design Pattern</a>
+                <a href="#security" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">Security & Context</a>
+                <a href="#xaml" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">WPF & XAML Parser</a>
+                
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-3 ml-2">Backend Modules</h3>
+                <a href="#remotemanagement" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">Remote Management (WinRM)</a>
+                <a href="#activedirectory" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">Active Directory</a>
+                <a href="#api" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded hover:bg-slate-100 hover:text-slate-900 transition">Freshservice API</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="md:col-span-3 space-y-12">
+
+            <!-- Architecture -->
+            <section id="architecture" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">1. Design Pattern & Deployment Structure</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>The application follows a decoupled, modular <strong>Model-View-ViewModel (MVVM)</strong> inspired architecture built entirely on native Windows PowerShell 5.1. The interface is defined purely in strict XAML (Extensible Application Markup Language), while the logic is segmented into specialized PowerShell Modules (`.psm1`).</p>
+                    <p>To facilitate ease of deployment, the application utilizes a <strong>Flat Directory Structure</strong>. All core engine files, UI templates, and logic modules exist in a single root folder. This prevents relative pathing errors when distributed via SCCM or network shares.</p>
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200 mt-4">
+                        <h4 class="font-bold text-slate-800 text-sm mb-2">Module Responsibilities</h4>
+                        <ul class="list-disc pl-5 space-y-1 text-sm">
+                            <li><strong>Main.ps1:</strong> The Entry Point. Initializes state, imports dependencies, loads the XAML, and enters the WPF Dispatcher loop.</li>
+                            <li><strong>CoreLogic.psm1:</strong> Handles Global State, centralized JSON configuration binding, custom XAML parsing, API calls, and Audit Logging.</li>
+                            <li><strong>UIEvents.psm1:</strong> The Controller. Binds PowerShell script blocks to XAML control events (Clicks, TextChanged) and manages thread contexts.</li>
+                            <li><strong>RemoteManagement.psm1:</strong> The WMI/CIM/WinRM execution engine.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Context -->
+            <section id="security" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">2. Security & Execution Context</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>Helpdesk Companion <strong>does not use stored credentials or run as a service account</strong>. It executes exclusively under the Active Directory token of the user who launches `Main.ps1`.</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-4">
+                        <li><strong>Least Privilege:</strong> If a standard user launches the application, AD queries will work (read-only), but password resets, unlocks, and Remote Management actions will fail gracefully via standard Windows Access Denied exceptions.</li>
+                        <li><strong>Execution Policy:</strong> The launch shortcut utilizes <code>powershell.exe -ExecutionPolicy Bypass</code> to execute the scripts without altering the host machine's global execution registry keys.</li>
+                        <li><strong>Audit Trail:</strong> The application injects <code>$env:USERNAME</code> and <code>$env:COMPUTERNAME</code> into the centralized CSV logs for every critical action (Unlocks, Resets, Uninstalls) to maintain compliance tracking.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- XAML Parsing -->
+            <section id="xaml" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">3. WPF & Strict XAML Parsing</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>The application features a custom UI loader (<code>Load-XamlWindow</code> in <code>CoreLogic.psm1</code>) that dynamically injects theme colors and strictly parses XML to comply with modern .NET Framework security policies.</p>
+                    
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">DTD Processing Security Fix</h4>
+                    <p>To prevent <code>XamlParseException</code> errors when spawning dynamic inline windows (like the Run Task or Message popups), the custom parser explicitly overrides the default .NET XML security restrictions to allow local DTD processing:</p>
+                    
+                    <div class="bg-gray-900 text-green-400 p-4 rounded mt-2 code-block overflow-x-auto">
+$xmlSettings = New-Object System.Xml.XmlReaderSettings<br>
+$xmlSettings.DtdProcessing = [System.Xml.DtdProcessing]::Parse<br>
+$reader = [System.Xml.XmlReader]::Create([System.IO.StringReader]::new($xamlText), $xmlSettings)<br>
+return [System.Windows.Markup.XamlReader]::Load($reader)
+                    </div>
+                </div>
+            </section>
+
+            <!-- Remote Management Engine -->
+            <section id="remotemanagement" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">4. Remote Management Engine (WinRM)</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>The <code>RemoteManagement.psm1</code> module powers the System Manager. Due to modern firewalls blocking legacy RPC (Remote Procedure Call) and DCOM ports, the application was refactored to tunnel <strong>all</strong> endpoint administration exclusively through <strong>WinRM (Windows Remote Management)</strong> via <code>Invoke-Command</code>.</p>
+
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">The Deserialization Challenge</h4>
+                    <p>Because WinRM serializes objects into XML to transmit them over the network, standard objects returned from endpoints (like Processes or Profiles) arrive as <code>PSObject</code> deserialized data. The WPF `GridView` control famously fails to bind to these properties.</p>
+                    <p><strong>The Solution:</strong> <code>UIEvents.psm1</code> strictly rebuilds every single array returned by the Remote Management module into fresh <code>[PSCustomObject]</code> wrappers before assigning them to the UI's <code>ItemsSource</code>.</p>
+
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">Silent Software Uninstallation Logic</h4>
+                    <p>The <code>Uninstall-RemoteSoftware</code> function uses an intelligent parser to execute background uninstalls. It queries the remote registry for the <code>QuietUninstallString</code>. If unavailable, it analyzes the standard <code>UninstallString</code> to determine the installer framework:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                        <li><strong>MSI (msiexec):</strong> Replaces <code>/I</code> with <code>/X</code> and appends <code>/qn /norestart</code>.</li>
+                        <li><strong>InnoSetup (unins000.exe):</strong> Appends <code>/VERYSILENT /SUPPRESSMSGBOXES</code>.</li>
+                        <li><strong>Nullsoft (uninstall.exe):</strong> Appends <code>/S</code>.</li>
+                    </ul>
+                    <p>The resulting string is then executed natively on the remote host via WMI's <code>Win32_Process Create</code> method inside a WinRM block.</p>
+                </div>
+            </section>
+
+            <!-- Active Directory -->
+            <section id="activedirectory" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">5. Active Directory Optimization</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>The <code>ActiveDirectory.psm1</code> module relies on the RSAT Active Directory PowerShell module. To ensure the interface does not lock up during the 30-second background polling cycle, AD queries use highly optimized server-side filtering.</p>
+
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">Lockout Querying</h4>
+                    <div class="bg-gray-900 text-green-400 p-4 rounded mt-2 code-block overflow-x-auto">
+Search-ADAccount -LockedOut -UsersOnly -ResultPageSize 2000
+                    </div>
+                    <p class="mt-2 text-sm">We use `Search-ADAccount` instead of `Get-ADUser -Filter {LockedOut -eq $true}` because the former executes directly against the Domain Controller's pre-computed bitmask index, making it exponentially faster in large environments.</p>
+
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">PDC Event Log Parsing (Lockout Source)</h4>
+                    <p>The "Find Lockout Source" feature does not query local domain controllers. It dynamically discovers the Forest's PDC Emulator (Primary Domain Controller) and queries its security log for <strong>Event ID 4740</strong>. The PDC is the authoritative source where all bad password attempts are ultimately forwarded.</p>
+                </div>
+            </section>
+
+            <!-- Freshservice API -->
+            <section id="api" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-6">6. Freshservice API V2 Implementation</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <p>The application integrates with the Freshservice ITSM to provide hardware asset lookups based on AD data. It authenticates via Basic Auth utilizing a Base64 encoded API token provided via <code>hdcompanioncfg.json</code>.</p>
+
+                    <h4 class="font-bold text-slate-800 text-sm mt-6 mb-2">User-to-Computer Lookup Pipeline</h4>
+                    <p>Because assets in Freshservice are assigned to "Requesters", resolving an AD User to a Computer requires a chained two-step API call:</p>
+                    <ol class="list-decimal pl-5 space-y-2 mt-2 text-sm">
+                        <li><strong>Requester Query:</strong> The app takes the user's AD <code>EmailAddress</code> property and passes it to the Requesters endpoint using V2 Query syntax: <code>/api/v2/requesters?query="primary_email:'user@domain.com'"</code> to retrieve the internal integer <code>user_id</code>.</li>
+                        <li><strong>Asset Query:</strong> The app then queries the Assets endpoint using that ID: <code>/api/v2/assets?query="user_id:{id}"</code> to retrieve the array of assigned hardware.</li>
+                    </ol>
+
+                    <p class="mt-4 text-sm bg-yellow-50 p-3 border-l-4 border-yellow-500"><strong>Error Handling:</strong> The API module includes an exception interceptor that extracts the hidden JSON response body from HTTP 400 Bad Request errors to expose the specific Freshservice syntax failure to the UI.</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</body>
+</html>

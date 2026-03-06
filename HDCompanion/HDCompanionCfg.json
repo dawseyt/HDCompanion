@@ -1,0 +1,190 @@
+{
+    "GeneralSettings": {
+        "DomainName": "pscu.local",
+        "LogDirectoryUNC": "\\\\vm-isserver\\Toolkit\\[IT Toolkit]\\HDCompanion\\Logs",
+        "LogRetentionDays": 90,
+        "FilteredUsers": [
+            "guest",
+            "support",
+            "admbrian"
+        ],
+        "DefaultTheme": "Light",
+        "SplashtopAPIToken": "",
+        "FreshserviceDomain": "https://pelicanstatecreditunion.freshservice.com",
+        "FreshserviceAPIKey": "QBZwMMFeWzmRVG8FGN5"
+    },
+    "AutoSettings": {
+        "AutoRefreshOptions": [
+            "30 seconds",
+            "1 minute",
+            "2 minutes",
+            "5 minutes",
+            "10 minutes",
+            "15 minutes",
+            "30 minutes"
+        ],
+        "AutoUnlockIntervalSeconds": 300
+    },
+    "EmailSettings": {
+        "EnableEmailNotifications": true,
+        "SmtpServer": "10.104.100.165",
+        "SmtpPort": 25,
+        "EnableSsl": true,
+        "FromAddress": "AccountMonitor@pelicancu.com",
+        "ToAddress": [
+            "tdawsey@pelicancu.com",
+            "bhigginbotham@pelicancu.com",
+            "adaigle@pelicancu.com"
+        ],
+        "SmtpUsername": "",
+        "SmtpPassword": ""
+    },
+    "LightModeColors": {
+        "Text": [
+            32,
+            32,
+            32
+        ],
+        "Primary": [
+            0,
+            90,
+            158
+        ],
+        "Danger": [
+            200,
+            30,
+            30
+        ],
+        "TextSecondary": [
+            96,
+            96,
+            96
+        ],
+        "Background": [
+            243,
+            243,
+            243
+        ],
+        "Success": [
+            16,
+            124,
+            16
+        ],
+        "Card": [
+            255,
+            255,
+            255
+        ],
+        "Secondary": [
+            200,
+            200,
+            200
+        ],
+        "Hover": [
+            229,
+            229,
+            229
+        ],
+        "OnlineText": [
+            0,
+            100,
+            0
+        ],
+        "OfflineText": [
+            178,
+            34,
+            34
+        ]
+    },
+    "DarkModeColors": {
+        "Text": [
+            255,
+            255,
+            255
+        ],
+        "Primary": [
+            0,
+            120,
+            212
+        ],
+        "Danger": [
+            255,
+            100,
+            100
+        ],
+        "TextSecondary": [
+            200,
+            200,
+            200
+        ],
+        "Background": [
+            32,
+            32,
+            32
+        ],
+        "Success": [
+            108,
+            203,
+            95
+        ],
+        "Card": [
+            45,
+            45,
+            48
+        ],
+        "Secondary": [
+            100,
+            100,
+            100
+        ],
+        "Hover": [
+            62,
+            62,
+            66
+        ],
+        "OnlineText": [
+            255,
+            255,
+            255
+        ],
+        "OfflineText": [
+            255,
+            255,
+            255
+        ],
+        "OnlineBg": [
+            35,
+            90,
+            35
+        ],
+        "OfflineBg": [
+            90,
+            35,
+            35
+        ]
+    },
+    "ControlProperties": {
+        "TitleLabel": {
+            "Text": "HelpDesk Companion"
+        },
+        "SubtitleLabel": {
+            "Text": "Less searching. More solving."
+        },
+        "UnlockButton": {
+            "Text": "Unlock Selected"
+        },
+        "UnlockAllButton": {
+            "Text": "Unlock All"
+        },
+        "RefreshButton": {
+            "Text": "Refresh"
+        },
+        "SearchButton": {
+            "Text": "Search"
+        },
+        "ViewLogButton": {
+            "Text": "View Logs"
+        }
+    },
+    "LoadedConfigPath": null
+}
